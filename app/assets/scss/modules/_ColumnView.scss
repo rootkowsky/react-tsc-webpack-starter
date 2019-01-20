@@ -1,0 +1,12 @@
+.ColumnView {
+	padding: 40px 20px;
+	background-color: #eee;
+	border: 1px solid #999;
+
+	&:before,
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+}

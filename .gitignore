@@ -1,0 +1,8 @@
+.DS_Store
+.idea
+node_modules/
+npm-debug.log
+app/dist/
+dist/
+typings
+_icon-font.scss
