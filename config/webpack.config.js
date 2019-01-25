@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	entry: {
@@ -10,7 +11,7 @@ module.exports = {
 		filename: "[name].bundle.js",
 	},
 	resolve: {
-		extensions: [".tsx", ".ts", ".jsx", ".js"],
+		extensions: [".tsx", ".ts", ".jsx", ".js", ".scss", ".css"],
 	},
 	module: {
 		rules: [
@@ -33,8 +34,42 @@ module.exports = {
 					},
 				],
 			},
+			{
+				test: /\.scss$/,
+				use: [
+					// MiniCssExtractPlugin.loader,
+					{
+						loader: "file-loader",
+						options: {
+							name: "css/style.css",
+						},
+					},
+					"extract-loader",
+					"css-loader", // translates CSS into CommonJS
+					{
+						loader: 'postcss-loader',
+						options: {
+							config: {
+								path: utils.path('config/'),
+							},
+						},
+					},
+					// {
+					// 	loader: "sass-loader",
+					// 	options: {
+					// 		importer: globImporter(),
+					// 	},
+					// }
+				],
+			},
 		],
 	},
+	plugins: [
+		new MiniCssExtractPlugin({
+			filename: "_[name]",
+			// chunkFilename: "[id].css",
+		}),
+	],
 	devServer: {
 		host: 'localhost',
 		port: 8080,
