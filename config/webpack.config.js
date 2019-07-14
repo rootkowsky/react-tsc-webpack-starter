@@ -1,16 +1,28 @@
+const webpack = require('webpack');
 const utils = require('./utils');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const config = require("./config");
 
 module.exports = {
-	entry: {
-		app: utils.path('app/src/index.tsx'),
+	entry: config.entry,
+	resolve: {
+		extensions: [".tsx", ".ts", '.jsx', '.js'],
 	},
 	output: {
-		path: utils.path('dist/js'),
+		path: config.output.path,
 		publicPath: "/dist/js/",
 		filename: "[name].bundle.js",
+		chunkFilename: "[name].bundle.js",
+		crossOriginLoading: "anonymous",
 	},
-	resolve: {
-		extensions: [".tsx", ".ts", ".jsx", ".js"],
+	watchOptions: {
+		ignored: [
+			'dist',
+			'config',
+			'node_modules',
+			'app/assets',
+		],
 	},
 	module: {
 		rules: [
@@ -20,28 +32,47 @@ module.exports = {
 				use: [
 					{
 						loader: 'babel-loader',
-						options: {
-							babelrc: true,
-							configFile: utils.path('config/.babelrc'),
-						},
 					},
 					{
-						loader: 'awesome-typescript-loader',
+						loader: 'ts-loader',
 						options: {
-							configFileName: utils.path('config/tsconfig.json'),
+							onlyCompileBundledFiles: true,
+							transpileOnly: true,
 						},
 					},
 				],
 			},
+
 		],
 	},
-	devServer: {
-		host: 'localhost',
-		port: 8080,
-		publicPath: "/dist/js/",
-		contentBase: utils.path('/'),
-		hot: false,
-		inline: false,
-		progress: false,
-	},
+	// performance: {
+	// 	hints: false,
+	// },
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'initial',
+	// 		cacheGroups: {
+	// 			default: false,
+	// 			vendors: false,
+	// 		},
+	// 	}
+	// },
+	plugins: [
+		new webpack.DefinePlugin({}),
+		new webpack.BannerPlugin(
+			{banner: "Copyright (c) 2019, pogwizd.pl\nAll rights reserved."},
+		),
+		new ForkTsCheckerWebpackPlugin({
+			formatter: 'codeframe',
+			async: true,
+			useTypescriptIncrementalApi: true,
+			measureCompilationTime: true,
+		}),
+		new ForkTsCheckerNotifierWebpackPlugin({
+			title: 'TypeScript',
+			excludeWarnings: false,
+			skipSuccessful: true,
+		}),
+	],
+	devServer: config.devServer,
 };

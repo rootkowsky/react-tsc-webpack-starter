@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"noImplicitAny": false,
+		"target": "es6",
+		"jsx": "react",
+		"moduleResolution": "node",
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"keyofStringsOnly": true,
+		"skipLibCheck": true,
+		"allowJs": false
+	},
+	"include": [
+		"./app/src/index.tsx"
+	],
+	"exclude": [
+		"./dist/",
+		"./config/",
+		"./node_modules/",
+		"./app/assets/"
+	]
+}
