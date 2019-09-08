@@ -18,12 +18,14 @@ const iconFontCss = require('gulp-iconfont-css');
 
 const process = require('process');
 const exec = require('child_process').exec;
+const jasmineBrowser = require('gulp-jasmine-browser');
 
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const WebpackDevServer = require("webpack-dev-server");
 const webpackProdConfig = require('./webpack.prod.config.js');
 const webpackDevConfig = require('./webpack.dev.config.js');
+const webpackTestConfig = require('./webpack.test.config.js');
 
 const log = (data) => process.stdout.write(data);
 
@@ -228,3 +230,12 @@ gulp.task("develop-dev", gulp.series(
 		"watch-dev-app",
 	),
 ));
+
+gulp.task('develop-test', function () {
+	const specPath = path.resolve("../app/test/**/*Test.ts");
+	webpackTestConfig.watch = true;
+	return gulp.src([specPath])
+		.pipe(webpackStream(webpackTestConfig))
+		.pipe(jasmineBrowser.specRunner())
+		.pipe(jasmineBrowser.server());
+});
